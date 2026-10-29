@@ -1,0 +1,6 @@
+{
+  "name": "CelebraAI",
+  "description": "AI-powered event command center with interactive 3D venue simulation, deterministic crisis recovery, and event version rewind.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-display: 'Plus Jakarta Sans', 'Noto Sans', system-ui, -apple-system, sans-serif;
+    --font-body: 'DM Sans', 'Noto Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Noto Sans', Roboto, monospace;
+    
+    --bg-canvas: #FAF8F5;
+    --bg-surface: #FFFFFF;
+    --bg-muted: #F3EFEA;
+    --border-subtle: rgba(26, 29, 32, 0.08);
+    --border-strong: rgba(26, 29, 32, 0.16);
+    
+    --emerald-primary: #0D3B2E;
+    --emerald-light: #165342;
+    --emerald-surface: #EBF4F0;
+    
+    --gold-accent: #C59B27;
+    --gold-subtle: #F6F1E3;
+    
+    --charcoal-primary: #181B1E;
+    --charcoal-secondary: #4A5056;
+    --charcoal-tertiary: #7D858D;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--bg-canvas);
+    color: var(--charcoal-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(26, 29, 32, 0.15);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(26, 29, 32, 0.28);
+}
