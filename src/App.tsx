@@ -9,6 +9,7 @@ import {
   createInitialDemoFestival,
   createWeddingPreset,
   createBirthdayPreset,
+  createCommunityPreset,
 } from './data/demoEvents';
 import { LandingPage } from './components/landing/LandingPage';
 import { LiveAnnouncer } from './components/common/LiveAnnouncer';
@@ -43,6 +44,7 @@ export default function App() {
       createInitialDemoFestival(),
       createWeddingPreset(),
       createBirthdayPreset(),
+      createCommunityPreset(),
     ];
   });
 
@@ -74,12 +76,14 @@ export default function App() {
     setView('command');
   };
 
-  const handleLoadPreset = (preset: 'festival' | 'wedding' | 'birthday') => {
+  const handleLoadPreset = (preset: 'festival' | 'wedding' | 'birthday' | 'community') => {
     let targetEvent: EventData;
     if (preset === 'wedding') {
       targetEvent = createWeddingPreset();
     } else if (preset === 'birthday') {
       targetEvent = createBirthdayPreset();
+    } else if (preset === 'community') {
+      targetEvent = createCommunityPreset();
     } else {
       targetEvent = createInitialDemoFestival();
     }
@@ -110,6 +114,7 @@ export default function App() {
       createInitialDemoFestival(),
       createWeddingPreset(),
       createBirthdayPreset(),
+      createCommunityPreset(),
     ];
     setEvents(defaults);
     setActiveEventId(defaults[0].id);

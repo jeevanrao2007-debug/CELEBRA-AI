@@ -69,7 +69,7 @@ export function sanitizeString(val: unknown, maxLength = 255): string {
 /**
  * Validates and sanitizes plan generation inputs to protect against invalid ranges or injection.
  */
-export function validatePlanInput(raw: any): {
+export function validatePlanInput(raw: unknown): {
   isValid: boolean;
   errors: string[];
   sanitized?: PlanInput;
@@ -80,50 +80,53 @@ export function validatePlanInput(raw: any): {
     return { isValid: false, errors: ['Request body must be a valid JSON object.'] };
   }
 
+  // Narrow to a record of unknown values for safe property access
+  const r = raw as Record<string, unknown>;
+
   // Name
-  const rawName = typeof raw.name === 'string' ? raw.name : '';
+  const rawName = typeof r.name === 'string' ? r.name : '';
   const name = sanitizeString(rawName, 120);
   if (!name) {
     errors.push('Event name is required.');
   }
 
   // Category
-  const category = raw.category as EventCategory;
+  const category = r.category as EventCategory;
   if (!ALLOWED_CATEGORIES.includes(category)) {
     errors.push(`Invalid event category. Must be one of: ${ALLOWED_CATEGORIES.join(', ')}.`);
   }
 
   // Attendance
-  const attendance = parseInt(String(raw.expectedAttendance), 10);
+  const attendance = parseInt(String(r.expectedAttendance), 10);
   if (isNaN(attendance) || attendance < 1 || attendance > 50000) {
     errors.push('Expected attendance must be a positive integer between 1 and 50,000.');
   }
 
   // Budget
-  const budget = parseFloat(String(raw.totalBudget));
+  const budget = parseFloat(String(r.totalBudget));
   if (isNaN(budget) || budget < 1000 || budget > 100000000) {
     errors.push('Total budget must be a positive number between 1,000 and 100,000,000.');
   }
 
   // Currency
-  const currency = (raw.currency || 'INR') as CurrencyCode;
+  const currency = ((r.currency as string) || 'INR') as CurrencyCode;
   if (!ALLOWED_CURRENCIES.includes(currency)) {
     errors.push(`Invalid currency. Allowed: ${ALLOWED_CURRENCIES.join(', ')}.`);
   }
 
   // Venue Type
-  const venueType = (raw.venueType || 'hybrid') as 'indoor' | 'outdoor' | 'hybrid';
+  const venueType = ((r.venueType as string) || 'hybrid') as 'indoor' | 'outdoor' | 'hybrid';
   if (!ALLOWED_VENUE_TYPES.includes(venueType)) {
     errors.push('Venue type must be indoor, outdoor, or hybrid.');
   }
 
   // Strings (Date, City, StyleTheme)
-  const date = sanitizeString(typeof raw.date === 'string' ? raw.date : new Date().toISOString().split('T')[0], 30);
-  const city = sanitizeString(typeof raw.city === 'string' ? raw.city : 'Main Venue', 100);
-  const styleTheme = sanitizeString(typeof raw.styleTheme === 'string' ? raw.styleTheme : 'Elegant Minimalist', 150);
-  const dietary = sanitizeString(raw.dietary, 200);
-  const accessibility = sanitizeString(raw.accessibility, 200);
-  const constraints = sanitizeString(raw.constraints, 200);
+  const date = sanitizeString(typeof r.date === 'string' ? r.date : new Date().toISOString().split('T')[0], 30);
+  const city = sanitizeString(typeof r.city === 'string' ? r.city : 'Main Venue', 100);
+  const styleTheme = sanitizeString(typeof r.styleTheme === 'string' ? r.styleTheme : 'Elegant Minimalist', 150);
+  const dietary = sanitizeString(r.dietary, 200);
+  const accessibility = sanitizeString(r.accessibility, 200);
+  const constraints = sanitizeString(r.constraints, 200);
 
   if (errors.length > 0) {
     return { isValid: false, errors };
@@ -152,7 +155,7 @@ export function validatePlanInput(raw: any): {
 /**
  * Validates contextual assistant chat input and bounded context parameters.
  */
-export function validateAssistantInput(raw: any): {
+export function validateAssistantInput(raw: unknown): {
   isValid: boolean;
   errors: string[];
   sanitized?: AssistantInput;
@@ -163,7 +166,8 @@ export function validateAssistantInput(raw: any): {
     return { isValid: false, errors: ['Request body must be a valid JSON object.'] };
   }
 
-  const rawPrompt = typeof raw.prompt === 'string' ? raw.prompt.trim() : '';
+  const r = raw as Record<string, unknown>;
+  const rawPrompt = typeof r.prompt === 'string' ? r.prompt.trim() : '';
   if (!rawPrompt) {
     errors.push('Prompt string cannot be empty.');
   } else if (rawPrompt.length > 1000) {
@@ -171,7 +175,7 @@ export function validateAssistantInput(raw: any): {
   }
   const prompt = sanitizeString(rawPrompt, 1000);
 
-  const contextRaw = raw.context || {};
+  const contextRaw = (r.context && typeof r.context === 'object' ? r.context : {}) as Record<string, unknown>;
   const eventName = sanitizeString(contextRaw.eventName || 'Current Event', 120);
   const expectedAttendance = Math.max(0, parseInt(String(contextRaw.expectedAttendance), 10) || 0);
   const taskCount = Math.max(0, parseInt(String(contextRaw.taskCount), 10) || 0);
@@ -199,17 +203,99 @@ export function validateAssistantInput(raw: any): {
   };
 }
 
+/** Represents the raw AI-generated expense item before sanitization. */
+interface RawAiExpense {
+  id?: unknown;
+  category?: unknown;
+  description?: unknown;
+  quantity?: unknown;
+  unitCost?: unknown;
+  status?: unknown;
+}
+
+/** Represents the raw AI-generated layout object before sanitization. */
+interface RawAiLayoutObject {
+  id?: unknown;
+  type?: unknown;
+  name?: unknown;
+  zone?: unknown;
+  position?: unknown[];
+  capacity?: unknown;
+}
+
+/** Represents the raw AI-generated task before sanitization. */
+interface RawAiTask {
+  id?: unknown;
+  title?: unknown;
+  description?: unknown;
+  category?: unknown;
+  assignedRole?: unknown;
+  startDate?: unknown;
+  dueDate?: unknown;
+  priority?: unknown;
+  status?: unknown;
+  dependencies?: unknown;
+  estimatedCost?: unknown;
+}
+
+/** Typed shape of the raw AI plan output (untrusted). */
+interface RawAiPlan {
+  expenses?: unknown[];
+  layoutObjects?: unknown[];
+  tasks?: unknown[];
+  [key: string]: unknown;
+}
+
+/** Typed shape of the sanitized plan returned to the caller. */
+export interface SanitizedAiPlan {
+  expenses: {
+    id: string;
+    category: ExpenseCategory;
+    description: string;
+    quantity: number;
+    unitCost: number;
+    subtotal: number;
+    confirmedAmount: number;
+    status: 'planned' | 'contracted';
+  }[];
+  layoutObjects: {
+    id: string;
+    type: string;
+    name: string;
+    zone: 'indoor' | 'outdoor';
+    position: [number, number, number];
+    rotation: [number, number, number];
+    scale: [number, number, number];
+    capacity: number;
+    status: 'operational';
+  }[];
+  tasks: {
+    id: string;
+    title: string;
+    description: string;
+    category: string;
+    assignedRole: string;
+    startDate: string;
+    dueDate: string;
+    priority: string;
+    status: string;
+    dependencies: string[];
+    estimatedCost: number;
+  }[];
+  [key: string]: unknown;
+}
+
 /**
  * Validates untrusted AI-generated plans to prevent corrupt data, NaN amounts, negative values,
  * or over-budget proposals from contaminating event state.
  */
 export function validateGeneratedAiPlan(
-  plan: any,
+  plan: unknown,
   maxBudget: number
 ): {
   isValid: boolean;
   errors: string[];
-  sanitizedPlan?: any;
+  sanitizedPlan?: SanitizedAiPlan;
 } {
   const errors: string[] = [];
 
@@ -217,20 +303,24 @@ export function validateGeneratedAiPlan(
     return { isValid: false, errors: ['AI output is not a valid JSON structure.'] };
   }
 
+  const rawPlan = plan as RawAiPlan;
+
   // Expenses validation
-  if (!Array.isArray(plan.expenses) || plan.expenses.length === 0) {
+  if (!Array.isArray(rawPlan.expenses) || rawPlan.expenses.length === 0) {
     errors.push('AI output must include an array of expenses.');
   }
 
   let totalExpenseSpend = 0;
-  const sanitizedExpenses: any[] = [];
+  const sanitizedExpenses: SanitizedAiPlan['expenses'] = [];
 
-  if (Array.isArray(plan.expenses)) {
-    for (let i = 0; i < plan.expenses.length; i++) {
-      const exp = plan.expenses[i];
+  if (Array.isArray(rawPlan.expenses)) {
+    for (let i = 0; i < rawPlan.expenses.length; i++) {
+      const exp = rawPlan.expenses[i] as RawAiExpense;
       if (!exp || typeof exp !== 'object') continue;
 
-      const category = ALLOWED_EXPENSE_CATEGORIES.includes(exp.category) ? exp.category : 'contingency';
+      const category = ALLOWED_EXPENSE_CATEGORIES.includes(exp.category as ExpenseCategory)
+        ? (exp.category as ExpenseCategory)
+        : 'contingency';
       const description = sanitizeString(exp.description, 100) || `Expense item ${i + 1}`;
       const quantity = Math.max(1, parseInt(String(exp.quantity), 10) || 1);
       const unitCost = Math.max(0, parseFloat(String(exp.unitCost)) || 0);
@@ -257,19 +347,20 @@ export function validateGeneratedAiPlan(
   }
 
   // Layout Objects validation
-  const sanitizedLayout: any[] = [];
-  if (Array.isArray(plan.layoutObjects)) {
-    for (let i = 0; i < plan.layoutObjects.length; i++) {
-      const obj = plan.layoutObjects[i];
+  const sanitizedLayout: SanitizedAiPlan['layoutObjects'] = [];
+  if (Array.isArray(rawPlan.layoutObjects)) {
+    for (let i = 0; i < rawPlan.layoutObjects.length; i++) {
+      const obj = rawPlan.layoutObjects[i] as RawAiLayoutObject;
       if (!obj || typeof obj !== 'object') continue;
 
-      const posX = typeof obj.position?.[0] === 'number' && !isNaN(obj.position[0]) ? obj.position[0] : 0;
-      const posY = typeof obj.position?.[1] === 'number' && !isNaN(obj.position[1]) ? obj.position[1] : 0;
-      const posZ = typeof obj.position?.[2] === 'number' && !isNaN(obj.position[2]) ? obj.position[2] : 0;
+      const pos = Array.isArray(obj.position) ? obj.position : [];
+      const posX = typeof pos[0] === 'number' && !isNaN(pos[0]) ? pos[0] : 0;
+      const posY = typeof pos[1] === 'number' && !isNaN(pos[1]) ? pos[1] : 0;
+      const posZ = typeof pos[2] === 'number' && !isNaN(pos[2]) ? pos[2] : 0;
 
       sanitizedLayout.push({
         id: typeof obj.id === 'string' && obj.id ? obj.id : `obj_ai_${i + 1}`,
-        type: obj.type || 'round_table',
+        type: typeof obj.type === 'string' ? obj.type : 'round_table',
         name: sanitizeString(obj.name, 60) || `Layout Object ${i + 1}`,
         zone: obj.zone === 'outdoor' ? 'outdoor' : 'indoor',
         position: [posX, posY, posZ],
@@ -282,11 +373,15 @@ export function validateGeneratedAiPlan(
   }
 
   // Tasks validation
-  const sanitizedTasks: any[] = [];
-  if (Array.isArray(plan.tasks)) {
-    for (let i = 0; i < plan.tasks.length; i++) {
-      const t = plan.tasks[i];
+  const sanitizedTasks: SanitizedAiPlan['tasks'] = [];
+  if (Array.isArray(rawPlan.tasks)) {
+    for (let i = 0; i < rawPlan.tasks.length; i++) {
+      const t = rawPlan.tasks[i] as RawAiTask;
       if (!t || typeof t !== 'object') continue;
+
+      const deps = Array.isArray(t.dependencies)
+        ? (t.dependencies as unknown[]).filter((d): d is string => typeof d === 'string')
+        : [];
 
       sanitizedTasks.push({
         id: typeof t.id === 'string' && t.id ? t.id : `task_ai_${i + 1}`,
@@ -296,9 +391,9 @@ export function validateGeneratedAiPlan(
         assignedRole: sanitizeString(t.assignedRole, 50) || 'Coordinator',
         startDate: typeof t.startDate === 'string' ? t.startDate : new Date().toISOString().split('T')[0],
         dueDate: typeof t.dueDate === 'string' ? t.dueDate : new Date().toISOString().split('T')[0],
-        priority: ['low', 'medium', 'high', 'critical'].includes(t.priority) ? t.priority : 'medium',
-        status: ['todo', 'in_progress', 'completed'].includes(t.status) ? t.status : 'todo',
-        dependencies: Array.isArray(t.dependencies) ? t.dependencies.filter((d: any) => typeof d === 'string') : [],
+        priority: ['low', 'medium', 'high', 'critical'].includes(String(t.priority)) ? String(t.priority) : 'medium',
+        status: ['todo', 'in_progress', 'completed'].includes(String(t.status)) ? String(t.status) : 'todo',
+        dependencies: deps,
         estimatedCost: Math.max(0, parseFloat(String(t.estimatedCost)) || 0),
       });
     }
@@ -312,7 +407,7 @@ export function validateGeneratedAiPlan(
     isValid: true,
     errors: [],
     sanitizedPlan: {
-      ...plan,
+      ...rawPlan,
       expenses: sanitizedExpenses,
       layoutObjects: sanitizedLayout,
       tasks: sanitizedTasks,

@@ -16,9 +16,20 @@ import {
   CheckCircle,
   Building,
 } from 'lucide-react';
-import { CurrencyCode, EventCategory, EventData, ExpenseItem, LayoutObject, Task, Vendor } from '../../types';
+import { CurrencyCode, EventCategory, EventData, ExpenseItem, LayoutObject, Task, Vendor, ScheduleItem, EventTheme } from '../../types';
 import { calculateBudgetSummary } from '../../logic/budgetEngine';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
+
+/** Shape of a raw AI-generated or fallback plan passed to buildAndSubmitEvent. */
+interface GeneratedPlan {
+  theme?: EventTheme;
+  venue?: EventData['venue'];
+  expenses?: ExpenseItem[];
+  layoutObjects?: LayoutObject[];
+  tasks?: Task[];
+  vendors?: Vendor[];
+  schedule?: ScheduleItem[];
+}
 
 interface EventWizardModalProps {
   isOpen: boolean;
@@ -113,7 +124,7 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
     }
   };
 
-  const buildAndSubmitEvent = (planData: any) => {
+  const buildAndSubmitEvent = (planData: GeneratedPlan) => {
     const expectedAttendance = Math.max(10, parseInt(attendance, 10) || 100);
     const totalBudget = Math.max(10000, parseFloat(budget) || 100000);
 
@@ -366,43 +377,45 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
       },
     ];
 
+    const schedule: ScheduleItem[] = [
+      {
+        id: 'sch_1',
+        startTime: startTime,
+        endTime: '01:00 PM',
+        title: 'Guest Arrival & Welcome Refreshments',
+        zone: 'indoor',
+        leadRole: 'Host',
+        description: 'Registration desk open; background ambient music',
+        isWeatherDependent: false,
+      },
+      {
+        id: 'sch_2',
+        startTime: '01:00 PM',
+        endTime: '03:00 PM',
+        title: 'Main Ceremony & Keynote Presentation',
+        zone: venuePref === 'outdoor' ? 'outdoor' : 'indoor',
+        leadRole: 'MC',
+        description: 'Formal address and celebratory programming',
+        isWeatherDependent: venuePref === 'outdoor',
+      },
+      {
+        id: 'sch_3',
+        startTime: '03:00 PM',
+        endTime: endTime,
+        title: 'Festive Banquet Dining & Social Evening',
+        zone: 'indoor',
+        leadRole: 'Hospitality',
+        description: 'Full buffet service with celebratory toasts',
+        isWeatherDependent: false,
+      },
+    ];
+
     return {
       expenses,
       layoutObjects,
       tasks,
       vendors,
-      schedule: [
-        {
-          id: 'sch_1',
-          startTime: startTime,
-          endTime: '01:00 PM',
-          title: 'Guest Arrival & Welcome Refreshments',
-          zone: 'indoor',
-          leadRole: 'Host',
-          description: 'Registration desk open; background ambient music',
-          isWeatherDependent: false,
-        },
-        {
-          id: 'sch_2',
-          startTime: '01:00 PM',
-          endTime: '03:00 PM',
-          title: 'Main Ceremony & Keynote Presentation',
-          zone: venuePref === 'outdoor' ? 'outdoor' : 'indoor',
-          leadRole: 'MC',
-          description: 'Formal address and celebratory programming',
-          isWeatherDependent: venuePref === 'outdoor',
-        },
-        {
-          id: 'sch_3',
-          startTime: '03:00 PM',
-          endTime: endTime,
-          title: 'Festive Banquet Dining & Social Evening',
-          zone: 'indoor',
-          leadRole: 'Hospitality',
-          description: 'Full buffet service with celebratory toasts',
-          isWeatherDependent: false,
-        },
-      ],
+      schedule,
     };
   };
 
@@ -439,8 +452,11 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
           {step === 1 && (
             <div className="space-y-4">
               <div>
-                <label className="block text-[#4A5056] font-medium mb-1">Event Name</label>
+                <label htmlFor="wizard-event-name" className="block text-[#4A5056] font-medium mb-1">
+                  Event Name
+                </label>
                 <input
+                  id="wizard-event-name"
                   type="text"
                   placeholder="e.g. Maya & Arjun's Sangeet Celebration"
                   value={name}
@@ -451,23 +467,29 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#4A5056] font-medium mb-1">Event Category</label>
+                  <label htmlFor="wizard-event-category" className="block text-[#4A5056] font-medium mb-1">
+                    Event Category
+                  </label>
                   <select
+                    id="wizard-event-category"
                     value={category}
                     onChange={(e) => setCategory(e.target.value as EventCategory)}
                     className="w-full px-3 py-2 border border-[rgba(26,29,32,0.15)] rounded-lg text-xs capitalize"
                   >
                     <option value="wedding">Wedding / Sangeet</option>
                     <option value="birthday">Birthday / Private</option>
-                    <option value="college_fest">College Cultural Festival</option>
                     <option value="community">Community Gathering</option>
+                    <option value="college_fest">College Cultural Festival</option>
                     <option value="corporate">Corporate Gala</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-[#4A5056] font-medium mb-1">Event Date</label>
+                  <label htmlFor="wizard-event-date" className="block text-[#4A5056] font-medium mb-1">
+                    Event Date
+                  </label>
                   <input
+                    id="wizard-event-date"
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
@@ -478,8 +500,11 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#4A5056] font-medium mb-1">Start Time</label>
+                  <label htmlFor="wizard-start-time" className="block text-[#4A5056] font-medium mb-1">
+                    Start Time
+                  </label>
                   <input
+                    id="wizard-start-time"
                     type="text"
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
@@ -488,8 +513,11 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[#4A5056] font-medium mb-1">End Time</label>
+                  <label htmlFor="wizard-end-time" className="block text-[#4A5056] font-medium mb-1">
+                    End Time
+                  </label>
                   <input
+                    id="wizard-end-time"
                     type="text"
                     value={endTime}
                     onChange={(e) => setEndTime(e.target.value)}
@@ -499,8 +527,11 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-[#4A5056] font-medium mb-1">City / Region</label>
+                <label htmlFor="wizard-city-region" className="block text-[#4A5056] font-medium mb-1">
+                  City / Region
+                </label>
                 <input
+                  id="wizard-city-region"
                   type="text"
                   placeholder="e.g. Mumbai, MH"
                   value={city}
@@ -515,10 +546,11 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#4A5056] font-medium mb-1">
+                  <label htmlFor="wizard-attendance" className="block text-[#4A5056] font-medium mb-1">
                     Expected Attendance
                   </label>
                   <input
+                    id="wizard-attendance"
                     type="number"
                     min="10"
                     value={attendance}
@@ -528,10 +560,11 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[#4A5056] font-medium mb-1">
+                  <label htmlFor="wizard-budget" className="block text-[#4A5056] font-medium mb-1">
                     Total Budget ({currency})
                   </label>
                   <input
+                    id="wizard-budget"
                     type="number"
                     min="1000"
                     value={budget}
@@ -543,8 +576,11 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#4A5056] font-medium mb-1">Currency</label>
+                  <label htmlFor="wizard-currency" className="block text-[#4A5056] font-medium mb-1">
+                    Currency
+                  </label>
                   <select
+                    id="wizard-currency"
                     value={currency}
                     onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
                     className="w-full px-3 py-2 border border-[rgba(26,29,32,0.15)] rounded-lg text-xs font-mono"
@@ -557,10 +593,13 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[#4A5056] font-medium mb-1">Venue Preference</label>
+                  <label htmlFor="wizard-venue-pref" className="block text-[#4A5056] font-medium mb-1">
+                    Venue Preference
+                  </label>
                   <select
+                    id="wizard-venue-pref"
                     value={venueType}
-                    onChange={(e) => setVenueType(e.target.value as any)}
+                    onChange={(e) => setVenueType(e.target.value as 'indoor' | 'outdoor' | 'hybrid')}
                     className="w-full px-3 py-2 border border-[rgba(26,29,32,0.15)] rounded-lg text-xs capitalize"
                   >
                     <option value="hybrid">Hybrid (Indoor Hall + Lawn)</option>
@@ -571,8 +610,11 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-[#4A5056] font-medium mb-1">Preferred Style / Theme</label>
+                <label htmlFor="wizard-style-theme" className="block text-[#4A5056] font-medium mb-1">
+                  Preferred Style / Theme
+                </label>
                 <input
+                  id="wizard-style-theme"
                   type="text"
                   value={styleTheme}
                   onChange={(e) => setStyleTheme(e.target.value)}
@@ -585,10 +627,11 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
           {step === 3 && (
             <div className="space-y-4">
               <div>
-                <label className="block text-[#4A5056] font-medium mb-1">
+                <label htmlFor="wizard-dietary" className="block text-[#4A5056] font-medium mb-1">
                   Dietary Preferences & Allergens
                 </label>
                 <input
+                  id="wizard-dietary"
                   type="text"
                   value={dietary}
                   onChange={(e) => setDietary(e.target.value)}
@@ -597,10 +640,11 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-[#4A5056] font-medium mb-1">
+                <label htmlFor="wizard-accessibility" className="block text-[#4A5056] font-medium mb-1">
                   Accessibility Requirements
                 </label>
                 <input
+                  id="wizard-accessibility"
                   type="text"
                   value={accessibility}
                   onChange={(e) => setAccessibility(e.target.value)}
@@ -609,10 +653,11 @@ export const EventWizardModal: React.FC<EventWizardModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-[#4A5056] font-medium mb-1">
+                <label htmlFor="wizard-constraints" className="block text-[#4A5056] font-medium mb-1">
                   Special Constraints & Permits
                 </label>
                 <textarea
+                  id="wizard-constraints"
                   rows={2}
                   value={constraints}
                   onChange={(e) => setConstraints(e.target.value)}

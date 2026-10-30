@@ -202,7 +202,8 @@ Ensure total expenses do not exceed ${totalBudget}, and reserve at least 10% con
 
     return res.json(aiValidation.sanitizedPlan);
   } catch (err: unknown) {
-    console.error('Gemini plan generation error:', err);
+    const message = err instanceof Error ? err.message : 'Internal error';
+    console.error('Gemini plan generation error message:', message);
     return res.status(500).json({ error: 'Event plan generation failed. Using deterministic fallback.' });
   }
 });
@@ -253,14 +254,16 @@ Provide concise, highly actionable advice. Do not output conversational fluff or
     const reply = response.text || 'No response generated.';
     return res.json({ reply });
   } catch (err: unknown) {
-    console.error('Gemini assistant error:', err);
+    const message = err instanceof Error ? err.message : 'Internal error';
+    console.error('Gemini assistant error message:', message);
     return res.status(500).json({ error: 'Assistant request failed.' });
   }
 });
 
 // Global error handler for uncaught express errors (prevents stack traces from leaking)
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-  console.error('Unhandled server error:', err);
+  const message = err instanceof Error ? err.message : 'Internal error';
+  console.error('Unhandled server error message:', message);
   if (
     typeof err === 'object' &&
     err !== null &&

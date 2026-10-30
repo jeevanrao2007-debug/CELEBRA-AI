@@ -58,3 +58,50 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(26, 29, 32, 0.28);
 }
+
+/* ─── WCAG 2.2 AA Focus Visibility ─────────────────────────────────────────── */
+/* Ensure all interactive elements have a clearly visible focus indicator        */
+:focus-visible {
+  outline: 2px solid #0D3B2E;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Remove default outline only when :focus-visible is used instead */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ─── Reduced Motion Support (WCAG 2.3.3) ───────────────────────────────────── */
+/* Suppress animations for users who prefer reduced motion                        */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Skip Navigation Link ──────────────────────────────────────────────────── */
+/* Visible only on keyboard focus — allows screen-reader/keyboard users to skip  */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: #0D3B2E;
+  color: #FAF8F5;
+  font-weight: 600;
+  border-radius: 0 0 4px 4px;
+  text-decoration: none;
+  transition: top 0.1s;
+}
+.skip-to-content:focus-visible {
+  top: 0;
+  outline: 2px solid #C59B27;
+  outline-offset: 2px;
+}

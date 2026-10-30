@@ -65,8 +65,11 @@ export const TaskEditModal: React.FC<TaskEditModalProps> = ({
         </h3>
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block text-[#4A5056] font-medium mb-1">Task Title</label>
+            <label htmlFor="edit-task-title-input" className="block text-[#4A5056] font-medium mb-1">
+              Task Title
+            </label>
             <input
+              id="edit-task-title-input"
               type="text"
               required
               value={title}
@@ -76,8 +79,11 @@ export const TaskEditModal: React.FC<TaskEditModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-[#4A5056] font-medium mb-1">Description</label>
+            <label htmlFor="edit-task-desc-input" className="block text-[#4A5056] font-medium mb-1">
+              Description
+            </label>
             <textarea
+              id="edit-task-desc-input"
               rows={2}
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
@@ -87,8 +93,11 @@ export const TaskEditModal: React.FC<TaskEditModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Assigned Role</label>
+              <label htmlFor="edit-task-role-input" className="block text-[#4A5056] font-medium mb-1">
+                Assigned Role
+              </label>
               <input
+                id="edit-task-role-input"
                 type="text"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
@@ -97,8 +106,11 @@ export const TaskEditModal: React.FC<TaskEditModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Due Date</label>
+              <label htmlFor="edit-task-duedate-input" className="block text-[#4A5056] font-medium mb-1">
+                Due Date
+              </label>
               <input
+                id="edit-task-duedate-input"
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
@@ -108,8 +120,11 @@ export const TaskEditModal: React.FC<TaskEditModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-[#4A5056] font-medium mb-1">Priority</label>
+            <label htmlFor="edit-task-priority-select" className="block text-[#4A5056] font-medium mb-1">
+              Priority
+            </label>
             <select
+              id="edit-task-priority-select"
               value={priority}
               onChange={(e) => setPriority(e.target.value as TaskPriority)}
               className="w-full px-3 py-2 border border-[rgba(26,29,32,0.15)] rounded-lg text-xs capitalize"

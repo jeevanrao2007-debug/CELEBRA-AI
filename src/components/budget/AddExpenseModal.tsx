@@ -71,8 +71,11 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         </h3>
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block text-[#4A5056] font-medium mb-1">Description</label>
+            <label htmlFor="expense-desc-input" className="block text-[#4A5056] font-medium mb-1">
+              Description
+            </label>
             <input
+              id="expense-desc-input"
               type="text"
               required
               placeholder="e.g. Wireless Microphones & Audio Snake"
@@ -84,8 +87,11 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Category</label>
+              <label htmlFor="expense-category-select" className="block text-[#4A5056] font-medium mb-1">
+                Category
+              </label>
               <select
+                id="expense-category-select"
                 value={category}
                 onChange={(e) => setCategory(e.target.value as ExpenseCategory)}
                 className="w-full px-3 py-2 border border-[rgba(26,29,32,0.15)] rounded-lg text-xs capitalize"
@@ -99,8 +105,11 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Status</label>
+              <label htmlFor="expense-status-select" className="block text-[#4A5056] font-medium mb-1">
+                Status
+              </label>
               <select
+                id="expense-status-select"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as ExpenseItem['status'])}
                 className="w-full px-3 py-2 border border-[rgba(26,29,32,0.15)] rounded-lg text-xs capitalize"
@@ -114,8 +123,11 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Quantity</label>
+              <label htmlFor="expense-qty-input" className="block text-[#4A5056] font-medium mb-1">
+                Quantity
+              </label>
               <input
+                id="expense-qty-input"
                 type="number"
                 min="1"
                 value={qty}
@@ -125,10 +137,11 @@ export const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">
+              <label htmlFor="expense-unitcost-input" className="block text-[#4A5056] font-medium mb-1">
                 Unit Cost ({currency})
               </label>
               <input
+                id="expense-unitcost-input"
                 type="number"
                 min="0"
                 value={unitCost}

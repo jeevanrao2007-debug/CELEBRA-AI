@@ -54,8 +54,9 @@ export const EventRewindView: React.FC<EventRewindViewProps> = ({
       setRestorationNotice(
         `Event successfully restored! A new version (v${restoredEvent.currentVersionNumber}) was recorded without overwriting past history.`
       );
-    } catch (err: any) {
-      setRestorationNotice(`Restoration failed: ${err.message}`);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      setRestorationNotice(`Restoration failed: ${message}`);
     }
   };
 

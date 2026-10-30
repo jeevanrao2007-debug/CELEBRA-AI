@@ -68,8 +68,11 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
         </h3>
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block text-[#4A5056] font-medium mb-1">Task Title</label>
+            <label htmlFor="task-title-input" className="block text-[#4A5056] font-medium mb-1">
+              Task Title
+            </label>
             <input
+              id="task-title-input"
               type="text"
               required
               placeholder="e.g. Master Audio FOH Sound Check"
@@ -80,8 +83,11 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-[#4A5056] font-medium mb-1">Description</label>
+            <label htmlFor="task-desc-input" className="block text-[#4A5056] font-medium mb-1">
+              Description
+            </label>
             <textarea
+              id="task-desc-input"
               rows={2}
               placeholder="Detailed operational steps or briefing instructions..."
               value={desc}
@@ -92,8 +98,11 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Category</label>
+              <label htmlFor="task-category-input" className="block text-[#4A5056] font-medium mb-1">
+                Category
+              </label>
               <input
+                id="task-category-input"
                 type="text"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -102,8 +111,11 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Assigned Role</label>
+              <label htmlFor="task-role-input" className="block text-[#4A5056] font-medium mb-1">
+                Assigned Role
+              </label>
               <input
+                id="task-role-input"
                 type="text"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
@@ -114,8 +126,11 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Due Date</label>
+              <label htmlFor="task-duedate-input" className="block text-[#4A5056] font-medium mb-1">
+                Due Date
+              </label>
               <input
+                id="task-duedate-input"
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
@@ -124,8 +139,11 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Priority</label>
+              <label htmlFor="task-priority-select" className="block text-[#4A5056] font-medium mb-1">
+                Priority
+              </label>
               <select
+                id="task-priority-select"
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as TaskPriority)}
                 className="w-full px-3 py-2 border border-[rgba(26,29,32,0.15)] rounded-lg text-xs capitalize"

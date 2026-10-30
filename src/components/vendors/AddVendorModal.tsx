@@ -121,8 +121,11 @@ export const AddVendorModal: React.FC<AddVendorModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Category</label>
+              <label htmlFor="vendor-category-select" className="block text-[#4A5056] font-medium mb-1">
+                Category
+              </label>
               <select
+                id="vendor-category-select"
                 value={category}
                 onChange={(e) => setCategory(e.target.value as ExpenseCategory)}
                 className="w-full px-3 py-2 border border-[rgba(26,29,32,0.15)] rounded-lg text-xs capitalize"
@@ -136,8 +139,11 @@ export const AddVendorModal: React.FC<AddVendorModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Contact Person</label>
+              <label htmlFor="vendor-contact-input" className="block text-[#4A5056] font-medium mb-1">
+                Contact Person
+              </label>
               <input
+                id="vendor-contact-input"
                 type="text"
                 placeholder="e.g. Rahul Sen"
                 value={contactPerson}
@@ -149,8 +155,11 @@ export const AddVendorModal: React.FC<AddVendorModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Phone</label>
+              <label htmlFor="vendor-phone-input" className="block text-[#4A5056] font-medium mb-1">
+                Phone
+              </label>
               <input
+                id="vendor-phone-input"
                 type="text"
                 placeholder="+91 98..."
                 value={phone}
@@ -160,8 +169,11 @@ export const AddVendorModal: React.FC<AddVendorModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Email</label>
+              <label htmlFor="vendor-email-input" className="block text-[#4A5056] font-medium mb-1">
+                Email
+              </label>
               <input
+                id="vendor-email-input"
                 type="email"
                 placeholder="contact@supplier.in"
                 value={email}
@@ -173,10 +185,11 @@ export const AddVendorModal: React.FC<AddVendorModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">
+              <label htmlFor="vendor-price-input" className="block text-[#4A5056] font-medium mb-1">
                 Quoted Fee ({currency})
               </label>
               <input
+                id="vendor-price-input"
                 type="number"
                 min="0"
                 value={quotedPrice}
@@ -186,8 +199,11 @@ export const AddVendorModal: React.FC<AddVendorModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-[#4A5056] font-medium mb-1">Capacity Limit (pax)</label>
+              <label htmlFor="vendor-capacity-input" className="block text-[#4A5056] font-medium mb-1">
+                Capacity Limit (pax)
+              </label>
               <input
+                id="vendor-capacity-input"
                 type="number"
                 min="1"
                 value={capacityLimit}
@@ -198,8 +214,11 @@ export const AddVendorModal: React.FC<AddVendorModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-[#4A5056] font-medium mb-1">Notes / Scope</label>
+            <label htmlFor="vendor-notes-input" className="block text-[#4A5056] font-medium mb-1">
+              Notes / Scope
+            </label>
             <textarea
+              id="vendor-notes-input"
               rows={2}
               placeholder="Equipment provided, SLA terms, delivery timing..."
               value={notes}

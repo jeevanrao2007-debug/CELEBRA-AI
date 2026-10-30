@@ -21,7 +21,7 @@ import { formatCurrency } from '../../logic/budgetEngine';
 
 interface LandingPageProps {
   onOpenDemo: () => void;
-  onOpenPreset?: (preset: 'festival' | 'wedding' | 'birthday') => void;
+  onOpenPreset?: (preset: 'festival' | 'wedding' | 'birthday' | 'community') => void;
   onOpenWizard: () => void;
   onOpenDashboard: () => void;
 }
@@ -32,22 +32,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenWizard,
   onOpenDashboard,
 }) => {
-  const [activeScenario, setActiveScenario] = React.useState<'festival' | 'wedding' | 'birthday'>('festival');
+  const [activeScenario, setActiveScenario] = React.useState<'festival' | 'wedding' | 'birthday' | 'community'>('wedding');
 
   const scenarios = {
-    festival: {
-      tag: 'College Cultural Fest',
-      title: 'Horizon Fest 2026 — Annual Campus Celebration',
-      description: 'A dual-zone campus celebration combining an indoor Jubilee Auditorium and outdoor Amphitheatre Lawn with 500 students.',
-      budget: '₹2,00,000',
-      pax: 500,
-      step1: '500 attendees planned across indoor auditorium and outdoor amphitheatre stage. Budget locked at ₹2,00,000.',
-      step1Meta: 'Status: Operational · Seating: 504 pax',
-      step2: 'Torrential downpour floods the outdoor lawn. Concert stage, line arrays, and 240 lawn seats become unusable.',
-      step2Meta: 'Capacity Delta: -240 pax · Impact: Severe',
-      step3: 'Autonomous pivot: stage relocated to indoor hall podium, reserve deployed for acoustic baffles, schedule updated.',
-      step3Meta: 'Feasibility: 100% Passed · Incremental Cost: +₹12,000',
-    },
     wedding: {
       tag: 'Royal Heritage Wedding',
       title: "Aria & Rohan's Emerald & Champagne Sangeet",
@@ -73,6 +60,32 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       step2Meta: 'Capacity Surge: +29% · Deficit: 27 seats',
       step3: 'Spatial reconfiguration: Relocate perimeter cocktail tables to terrace, expand seating by 32 pax within safe egress bounds.',
       step3Meta: 'Feasibility: 100% Passed · Buffer Absorbed',
+    },
+    community: {
+      tag: 'Community Heritage Fair & Charity Gala',
+      title: 'Oakridge Community Heritage Fair & Charity Gala',
+      description: 'A civic multi-zone gathering across the historic Town Hall and central cobblestone Green Plaza with 450 residents.',
+      budget: '₹2,80,000',
+      pax: 450,
+      step1: '450 community members planned across plaza artisan stalls, live stage, and town hall banquet. Budget set at ₹2,80,000.',
+      step1Meta: 'Status: Operational · Seating: 460 pax',
+      step2: 'Acoustic generator trip cuts main plaza audio and lighting during youth cultural dance showcase.',
+      step2Meta: 'Disruption: Equipment Failure · Severity: Moderate',
+      step3: 'Autonomous failover: Emergency acoustic battery backup engaged, indoor town hall sound rerouted, zero attendee injury.',
+      step3Meta: 'Feasibility: 100% Passed · Safety Protocol Maintained',
+    },
+    festival: {
+      tag: 'College Cultural Fest',
+      title: 'Horizon Fest 2026 — Annual Campus Celebration',
+      description: 'A dual-zone campus celebration combining an indoor Jubilee Auditorium and outdoor Amphitheatre Lawn with 500 students.',
+      budget: '₹2,00,000',
+      pax: 500,
+      step1: '500 attendees planned across indoor auditorium and outdoor amphitheatre stage. Budget locked at ₹2,00,000.',
+      step1Meta: 'Status: Operational · Seating: 504 pax',
+      step2: 'Torrential downpour floods the outdoor lawn. Concert stage, line arrays, and 240 lawn seats become unusable.',
+      step2Meta: 'Capacity Delta: -240 pax · Impact: Severe',
+      step3: 'Autonomous pivot: stage relocated to indoor hall podium, reserve deployed for acoustic baffles, schedule updated.',
+      step3Meta: 'Feasibility: 100% Passed · Incremental Cost: +₹12,000',
     },
   };
 
@@ -143,7 +156,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </h1>
 
         <p className="text-base md:text-lg text-[#4A5056] max-w-2xl mx-auto font-normal leading-relaxed">
-          The first event management platform that combines generative planning, interactive 3D venue layout, real-time crisis injection, and non-destructive event version rewind.
+          GenAI-powered planning assistant helping organizers plan weddings, birthdays, and community events with deterministic budgets, synchronized timelines, vendor checklists, and personalized operational ideas.
         </p>
 
         <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
@@ -178,17 +191,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* Featured Demonstration Scenario Card with Multi-Category Switcher */}
       <section id="simulation" className="px-6 py-12 max-w-6xl mx-auto w-full">
         {/* Scenario Switcher Tabs */}
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <button
-            onClick={() => setActiveScenario('festival')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-              activeScenario === 'festival'
-                ? 'bg-[#0D3B2E] text-white shadow-xs'
-                : 'bg-white text-[#4A5056] border border-[rgba(26,29,32,0.12)] hover:bg-[#FAF8F5]'
-            }`}
-          >
-            College Cultural Fest
-          </button>
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
           <button
             onClick={() => setActiveScenario('wedding')}
             className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
@@ -208,6 +211,26 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             }`}
           >
             Milestone 50th Birthday
+          </button>
+          <button
+            onClick={() => setActiveScenario('community')}
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeScenario === 'community'
+                ? 'bg-[#0D3B2E] text-white shadow-xs'
+                : 'bg-white text-[#4A5056] border border-[rgba(26,29,32,0.12)] hover:bg-[#FAF8F5]'
+            }`}
+          >
+            Community Heritage Fair
+          </button>
+          <button
+            onClick={() => setActiveScenario('festival')}
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeScenario === 'festival'
+                ? 'bg-[#0D3B2E] text-white shadow-xs'
+                : 'bg-white text-[#4A5056] border border-[rgba(26,29,32,0.12)] hover:bg-[#FAF8F5]'
+            }`}
+          >
+            College Cultural Fest
           </button>
         </div>
 
