@@ -771,28 +771,32 @@ export const Venue3DCanvas: React.FC<Venue3DCanvasProps> = ({ event, onUpdateLay
                       <button
                         onClick={() => handleMove(-0.8, 0)}
                         title="Move Left (-X)"
-                        className="p-1 hover:bg-white rounded transition-colors"
+                        aria-label="Move selected item left"
+                        className="p-1 hover:bg-white rounded transition-colors cursor-pointer"
                       >
                         <ArrowLeft className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleMove(0, -0.8)}
                         title="Move Forward (-Z)"
-                        className="p-1 hover:bg-white rounded transition-colors"
+                        aria-label="Move selected item forward"
+                        className="p-1 hover:bg-white rounded transition-colors cursor-pointer"
                       >
                         <ArrowUp className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleMove(0, 0.8)}
                         title="Move Back (+Z)"
-                        className="p-1 hover:bg-white rounded transition-colors"
+                        aria-label="Move selected item backward"
+                        className="p-1 hover:bg-white rounded transition-colors cursor-pointer"
                       >
                         <ArrowDown className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleMove(0.8, 0)}
                         title="Move Right (+X)"
-                        className="p-1 hover:bg-white rounded transition-colors"
+                        aria-label="Move selected item right"
+                        className="p-1 hover:bg-white rounded transition-colors cursor-pointer"
                       >
                         <ArrowRight className="w-3.5 h-3.5" />
                       </button>
@@ -801,7 +805,8 @@ export const Venue3DCanvas: React.FC<Venue3DCanvasProps> = ({ event, onUpdateLay
                     {/* Rotate */}
                     <button
                       onClick={handleRotate}
-                      className="flex items-center gap-1 px-2.5 py-1.5 bg-[#F3EFEA] hover:bg-[#E8E2D8] text-[#181B1E] rounded-lg transition-colors font-medium"
+                      aria-label="Rotate selected item 45 degrees clockwise"
+                      className="flex items-center gap-1 px-2.5 py-1.5 bg-[#F3EFEA] hover:bg-[#E8E2D8] text-[#181B1E] rounded-lg transition-colors font-medium cursor-pointer"
                     >
                       <RotateCw className="w-3.5 h-3.5" /> Rotate 45°
                     </button>
@@ -809,7 +814,8 @@ export const Venue3DCanvas: React.FC<Venue3DCanvasProps> = ({ event, onUpdateLay
                     {/* Delete */}
                     <button
                       onClick={handleDelete}
-                      className="flex items-center gap-1 px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg transition-colors font-medium"
+                      aria-label="Remove selected layout object from venue"
+                      className="flex items-center gap-1 px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg transition-colors font-medium cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" /> Remove
                     </button>

@@ -1,7 +1,13 @@
 {
-  "name": "react-example",
+  "name": "celebraai",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Autonomous GenAI Event Planning & Operational Command Center for Weddings, Birthdays, and Community Events",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jeevanrao2007-debug/CELEBRA-AI.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",

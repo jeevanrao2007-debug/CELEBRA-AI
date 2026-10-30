@@ -1,0 +1,45 @@
+name: CelebraAI CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Lint, Test & Production Build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Verify TypeScript & Static Analysis
+        run: npm run lint
+
+      - name: Run Test Suite (63 Tests across 19 Suites)
+        run: npm run test
+
+      - name: Compile Production Build (Client & Server)
+        run: npm run build
+
+      - name: Verify Dependency Security
+        run: npm audit --audit-level=high

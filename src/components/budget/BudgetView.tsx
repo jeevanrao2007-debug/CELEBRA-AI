@@ -557,6 +557,7 @@ export const BudgetView: React.FC<BudgetViewProps> = ({
                             onClick={() => handleStartInlineEdit(exp)}
                             className="text-[#7D858D] hover:text-[#0D3B2E] p-1 rounded transition-colors"
                             title="Edit inline"
+                            aria-label={`Edit ${exp.description}`}
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
@@ -564,6 +565,7 @@ export const BudgetView: React.FC<BudgetViewProps> = ({
                             onClick={() => handleDeleteExpense(exp.id)}
                             className="text-[#7D858D] hover:text-red-700 p-1 rounded transition-colors"
                             title="Remove expense"
+                            aria-label={`Delete ${exp.description}`}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>

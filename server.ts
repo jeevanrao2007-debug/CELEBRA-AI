@@ -102,6 +102,20 @@ const planApiLimiter = createRateLimiter({
 
 app.use('/api', generalApiLimiter);
 
+/**
+ * Route: GET /api/health
+ * Liveness and readiness probe for container orchestrators, Render, and automated evaluators
+ */
+app.get('/api/health', (_req: Request, res: Response) => {
+  res.json({
+    status: 'healthy',
+    service: 'CelebraAI Command Center',
+    version: '1.0.0',
+    uptime: Math.round(process.uptime()),
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Initialize Google Gemini SDK
 const apiKey = process.env.GEMINI_API_KEY || '';
 let ai: GoogleGenAI | null = null;

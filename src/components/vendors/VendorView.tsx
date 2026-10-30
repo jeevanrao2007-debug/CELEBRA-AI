@@ -246,8 +246,9 @@ export const VendorView: React.FC<VendorViewProps> = ({ event, onUpdateVendors }
 
                     <button
                       onClick={() => handleDeleteVendor(vendor.id)}
-                      className="text-[#7D858D] hover:text-red-700 p-1"
+                      className="text-[#7D858D] hover:text-red-700 p-1 cursor-pointer"
                       title="Remove vendor"
+                      aria-label={`Remove vendor ${vendor.name}`}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

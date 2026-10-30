@@ -146,8 +146,9 @@ export const EventCommandCenter: React.FC<EventCommandCenterProps> = ({
         <div className="flex items-center gap-3">
           <button
             onClick={onBackToDashboard}
-            className="p-1.5 hover:bg-[#FAF8F5] rounded-lg text-[#7D858D] hover:text-[#181B1E] transition-colors"
+            className="p-1.5 hover:bg-[#FAF8F5] rounded-lg text-[#7D858D] hover:text-[#181B1E] transition-colors cursor-pointer"
             title="Return to Dashboard"
+            aria-label="Return to Dashboard"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>

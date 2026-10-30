@@ -291,12 +291,13 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ event, onUpdateTasks
                 <div className="flex items-start gap-3">
                   <button
                     onClick={() => handleToggleTaskStatus(task)}
-                    className="mt-0.5 text-[#7D858D] hover:text-[#0D3B2E] transition-colors"
+                    className="mt-0.5 text-[#7D858D] hover:text-[#0D3B2E] transition-colors cursor-pointer"
                     title={
                       task.status === 'completed'
                         ? 'Mark incomplete'
                         : 'Mark complete (validates dependencies)'
                     }
+                    aria-label={`Toggle status for ${task.title}`}
                   >
                     <CheckCircle2
                       className={`w-5 h-5 ${
@@ -368,14 +369,16 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ event, onUpdateTasks
                     }}
                     className="p-1 text-[#7D858D] hover:text-amber-700 hover:bg-amber-50 rounded transition-colors"
                     title="Simulate delay on this task"
+                    aria-label={`Simulate delay on ${task.title}`}
                   >
                     <GitFork className="w-4 h-4" />
                   </button>
 
                   <button
                     onClick={() => handleStartEdit(task)}
-                    className="p-1 text-[#7D858D] hover:text-[#0D3B2E] hover:bg-[#FAF8F5] rounded transition-colors"
+                    className="p-1 text-[#7D858D] hover:text-[#0D3B2E] hover:bg-[#FAF8F5] rounded transition-colors cursor-pointer"
                     title="Edit task details"
+                    aria-label={`Edit ${task.title}`}
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
@@ -406,8 +409,9 @@ export const TimelineView: React.FC<TimelineViewProps> = ({ event, onUpdateTasks
 
                   <button
                     onClick={() => handleDeleteTask(task.id)}
-                    className="text-[#7D858D] hover:text-red-700 p-1"
+                    className="text-[#7D858D] hover:text-red-700 p-1 cursor-pointer"
                     title="Remove task"
+                    aria-label={`Remove ${task.title}`}
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
